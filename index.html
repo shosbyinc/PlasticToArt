@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plastic to Art — From Waste to Wonder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&display=swap');
+:root {
+  --dark: #0B2D3A;
+  --dark-deep: #071E27;
+  --teal: #1A8A8A;
+  --teal-light: #2CB5B5;
+  --white: #F5F5F0;
+  --off-white: #E8E8E3;
+  --gray: #9AABAB;
+  --font: 'Roboto Mono', monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body { background: var(--white); color: var(--dark); font-family: var(--font); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+
+/* ══════ NAV ══════ */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 24px 48px; display: flex; justify-content: space-between; align-items: center; transition: background 0.4s, backdrop-filter 0.4s; }
+nav.scrolled { background: rgba(11,45,58,0.85); backdrop-filter: blur(12px); }
+nav.page-nav { background: rgba(11,45,58,0.95); backdrop-filter: blur(12px); }
+.nav-logo { font-weight: 600; font-size: 1.1rem; color: var(--white); letter-spacing: -0.02em; cursor: pointer; }
+.nav-logo span { color: var(--teal-light); }
+.nav-links { display: flex; gap: 32px; list-style: none; }
+.nav-links a { color: rgba(245,245,240,0.7); text-decoration: none; font-size: 0.8rem; font-weight: 400; letter-spacing: 0.02em; transition: color 0.3s; cursor: pointer; }
+.nav-links a:hover { color: var(--white); }
+.nav-cta { background: var(--teal); color: var(--white) !important; padding: 10px 24px; border-radius: 6px; font-weight: 500 !important; transition: background 0.3s !important; }
+.nav-cta:hover { background: var(--teal-light) !important; }
+
+/* HAMBURGER */
+.burger { display: none; width: 32px; height: 20px; position: relative; cursor: pointer; z-index: 200; }
+.burger span { display: block; position: absolute; width: 100%; height: 2px; background: var(--white); transition: all 0.35s cubic-bezier(0.77,0.2,0.05,1); border-radius: 1px; }
+.burger span:nth-child(1) { top: 0; }
+.burger span:nth-child(2) { top: 9px; }
+.burger span:nth-child(3) { top: 18px; }
+.burger.open span:nth-child(1) { top: 9px; transform: rotate(45deg); }
+.burger.open span:nth-child(2) { opacity: 0; transform: translateX(-10px); }
+.burger.open span:nth-child(3) { top: 9px; transform: rotate(-45deg); }
+
+/* FULLSCREEN MENU */
+.menu-overlay {
+  position: fixed; inset: 0; z-index: 150;
+  background: var(--dark-deep);
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.4s;
+}
+.menu-overlay.open { opacity: 1; pointer-events: auto; }
+.menu-overlay a {
+  display: block; font-size: clamp(1.4rem, 4vw, 2.2rem);
+  font-weight: 300; color: var(--white);
+  text-decoration: none; padding: 16px 0;
+  opacity: 0; transform: translateY(20px);
+  transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+  cursor: pointer;
+}
+.menu-overlay.open a {
+  opacity: 1; transform: translateY(0);
+}
+.menu-overlay a:nth-child(1) { transition-delay: 0.05s; }
+.menu-overlay a:nth-child(2) { transition-delay: 0.1s; }
+.menu-overlay a:nth-child(3) { transition-delay: 0.15s; }
+.menu-overlay a:nth-child(4) { transition-delay: 0.2s; }
+.menu-overlay a:nth-child(5) { transition-delay: 0.25s; }
+.menu-overlay a:nth-child(6) { transition-delay: 0.3s; }
+.menu-overlay a:nth-child(7) { transition-delay: 0.35s; }
+.menu-overlay a:nth-child(8) { transition-delay: 0.4s; }
+.menu-overlay a:hover { color: var(--teal-light); }
+.menu-overlay .menu-label { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--teal); margin-bottom: 32px; }
+
+@media (max-width: 1100px) {
+  .nav-links { display: none !important; }
+  .burger { display: block; }
+}
+
+/* ══════ PAGES SYSTEM ══════ */
+.page { display: none; }
+.page.active { display: block; }
+#mainPage.active { display: block; }
+
+/* ══════ SUBPAGE ══════ */
+.subpage-hero { background: var(--dark-deep); padding: 160px 48px 80px; }
+.subpage-hero .section-label { color: var(--teal-light); }
+.subpage-hero h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); font-weight: 400; color: var(--white); line-height: 1.15; margin-bottom: 24px; }
+.subpage-hero h1 em { font-style: italic; color: var(--teal-light); }
+.subpage-hero .lead { font-size: 0.95rem; line-height: 1.8; color: var(--gray); max-width: 640px; }
+.subpage-body { padding: 80px 48px; max-width: 800px; margin: 0 auto; }
+.subpage-body p { font-size: 0.9rem; line-height: 2; color: #4A5B5B; margin-bottom: 24px; }
+.subpage-body h2 { font-size: 1.3rem; font-weight: 500; margin: 48px 0 20px; color: var(--dark); }
+.subpage-body h3 { font-size: 1.05rem; font-weight: 500; margin: 32px 0 12px; color: var(--dark); }
+.subpage-body blockquote { border-left: 3px solid var(--teal); padding: 20px 0 20px 28px; margin: 32px 0; font-style: italic; color: var(--dark); font-size: 1.05rem; line-height: 1.7; }
+.subpage-body .highlight { background: var(--dark-deep); color: var(--white); padding: 40px; border-radius: 12px; margin: 40px 0; }
+.subpage-body .highlight p { color: var(--gray); }
+.subpage-body .highlight strong { color: var(--teal-light); }
+.back-link { display: inline-flex; align-items: center; gap: 8px; font-size: 0.8rem; color: var(--teal-light); text-decoration: none; cursor: pointer; transition: gap 0.3s; margin-bottom: 40px; }
+.back-link:hover { gap: 14px; }
+
+/* ══════ HERO ══════ */
+.hero { position: relative; min-height: 100vh; background: var(--dark-deep); display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
+#heroCanvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; cursor: crosshair; }
+.hero-content { position: relative; z-index: 2; padding: 120px 48px 80px; max-width: 720px; pointer-events: none; }
+.hero-content a { pointer-events: auto; }
+.hero-tag { font-size: 0.7rem; color: var(--teal-light); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 32px; opacity: 0; animation: fadeUp 0.8s 0.4s forwards; }
+.hero h1 { font-size: clamp(2.6rem, 6vw, 4.5rem); font-weight: 400; line-height: 1.1; color: var(--white); margin-bottom: 32px; opacity: 0; animation: fadeUp 0.8s 0.6s forwards; }
+.hero h1 em { font-style: italic; color: var(--teal-light); }
+.hero-sub { font-size: 0.95rem; line-height: 1.7; color: var(--gray); max-width: 520px; margin-bottom: 48px; opacity: 0; animation: fadeUp 0.8s 0.8s forwards; }
+.btn-primary { display: inline-block; background: var(--teal); color: var(--white); padding: 16px 40px; border-radius: 8px; font-family: var(--font); font-size: 0.85rem; font-weight: 500; text-decoration: none; transition: all 0.3s; opacity: 0; animation: fadeUp 0.8s 1s forwards; }
+.btn-primary:hover { background: var(--teal-light); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(26,138,138,0.3); }
+.hero-year { position: absolute; right: 48px; top: 50%; transform: translateY(-50%); font-size: 8rem; font-weight: 700; color: rgba(245,245,240,0.03); z-index: 0; letter-spacing: -0.04em; }
+
+/* ══════ SECTIONS ══════ */
+section { padding: 120px 48px; }
+.section-label { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--teal); margin-bottom: 40px; display: flex; align-items: center; gap: 12px; }
+.section-label::before { content: ''; width: 24px; height: 1px; background: var(--teal); }
+
+/* ══════ ABOUT ══════ */
+.about { max-width: 1200px; margin: 0 auto; position: relative; }
+.about-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+.about-text h2 { font-size: 1.8rem; font-weight: 400; line-height: 1.25; margin-bottom: 28px; color: var(--dark); }
+.about-text p { font-size: 0.9rem; line-height: 1.8; color: #5A6B6B; }
+.about-counter { text-align: right; }
+.about-counter .counter-num { font-size: clamp(4rem, 10vw, 8rem); font-weight: 300; color: var(--dark); letter-spacing: -0.06em; line-height: 1; }
+.about-counter .counter-num span { color: var(--teal); }
+.about-counter .counter-label { font-size: 0.7rem; color: var(--gray); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 12px; }
+.about-divider { width: 100%; height: 1px; background: linear-gradient(90deg, transparent, var(--teal), transparent); margin: 64px 0 0; opacity: 0.2; }
+
+/* ══════ MANIFESTO ══════ */
+.manifesto { background: var(--dark-deep); color: var(--white); }
+.manifesto-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 48px; max-width: 1200px; margin: 0 auto; }
+.manifesto h2 { font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 400; line-height: 1.15; margin-bottom: 24px; }
+.manifesto h2 em { font-style: italic; color: var(--teal-light); }
+.manifesto-col p { font-size: 0.85rem; line-height: 1.8; color: var(--gray); }
+.manifesto-cta { max-width: 1200px; margin: 48px auto 0; }
+.manifesto-cta a { color: var(--teal-light); font-size: 0.8rem; text-decoration: none; cursor: pointer; border-bottom: 1px solid rgba(44,181,181,0.3); padding-bottom: 2px; transition: border-color 0.3s; }
+.manifesto-cta a:hover { border-color: var(--teal-light); }
+
+/* ══════ STATS ══════ */
+.stats { background: var(--dark); }
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; max-width: 1000px; margin: 0 auto; }
+.stat-card { background: var(--dark-deep); padding: 64px 48px; border-radius: 4px; }
+.stat-card.full { grid-column: 1 / -1; }
+.stat-number { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 300; color: var(--white); letter-spacing: -0.04em; margin-bottom: 16px; }
+.stat-label { font-size: 0.8rem; color: var(--gray); line-height: 1.6; }
+
+/* ══════ BLUEPOINTS ══════ */
+.bluepoints { background: linear-gradient(170deg, #0F3D4D 0%, var(--teal) 100%); color: var(--white); position: relative; overflow: hidden; }
+.bluepoints::before { content: ''; position: absolute; top: -50%; right: -20%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(44,181,181,0.2), transparent 70%); border-radius: 50%; }
+.bp-content { max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
+.bp-content h2 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 400; line-height: 1.1; margin-bottom: 24px; }
+.bp-content h2 em { font-style: italic; }
+.bp-desc { font-size: 0.9rem; line-height: 1.8; color: rgba(255,255,255,0.75); max-width: 560px; margin-bottom: 48px; }
+.bp-steps { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 32px; margin-bottom: 48px; }
+.bp-step { background: rgba(255,255,255,0.08); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 36px 28px; }
+.bp-step-num { font-size: 0.7rem; color: var(--teal-light); letter-spacing: 0.1em; margin-bottom: 16px; }
+.bp-step h3 { font-size: 0.95rem; font-weight: 500; margin-bottom: 8px; }
+.bp-step p { font-size: 0.8rem; color: rgba(255,255,255,0.6); line-height: 1.6; }
+.btn-outline { display: inline-block; border: 1px solid rgba(255,255,255,0.3); color: var(--white); padding: 14px 36px; border-radius: 8px; font-size: 0.8rem; font-family: var(--font); text-decoration: none; transition: all 0.3s; cursor: pointer; }
+.btn-outline:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.5); }
+
+/* ══════ TRANSFORM ══════ */
+.transform { text-align: center; max-width: 960px; margin: 0 auto; }
+.transform h2 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 400; line-height: 1.35; }
+.transform h2 em { font-style: italic; color: var(--teal); text-decoration: underline; text-decoration-color: var(--teal-light); text-underline-offset: 6px; }
+
+/* ══════ WATER.ORG ══════ */
+.waterorg { max-width: 1200px; margin: 0 auto; }
+.waterorg-text h3 { font-size: 1.5rem; font-weight: 400; margin-bottom: 20px; }
+.waterorg-text p { font-size: 0.9rem; line-height: 1.8; color: #5A6B6B; }
+
+/* ══════ TIMELINE ══════ */
+.timeline { background: var(--off-white); }
+.timeline-inner { max-width: 1200px; margin: 0 auto; }
+.timeline-desc { font-size: 1.1rem; line-height: 1.7; max-width: 700px; color: var(--dark); }
+
+/* ══════ INVOLVED ══════ */
+.involved { max-width: 1200px; margin: 0 auto; }
+.involved-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 32px; margin-bottom: 48px; }
+.involved-card { border: 1px solid rgba(11,45,58,0.1); border-radius: 12px; padding: 40px 32px; transition: all 0.3s; }
+.involved-card:hover { border-color: var(--teal); box-shadow: 0 8px 32px rgba(26,138,138,0.08); transform: translateY(-4px); }
+.involved-card h3 { font-size: 1.1rem; margin-bottom: 8px; }
+.involved-card .for-label { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--teal); margin-bottom: 16px; }
+.involved-card p { font-size: 0.8rem; line-height: 1.7; color: #5A6B6B; }
+.involved-cta { text-align: center; }
+.btn-dark { display: inline-block; background: var(--dark); color: var(--white); padding: 16px 48px; border-radius: 8px; font-size: 0.85rem; font-weight: 500; font-family: var(--font); text-decoration: none; transition: all 0.3s; }
+.btn-dark:hover { background: var(--teal); transform: translateY(-2px); }
+
+/* ══════ BLOG ══════ */
+.blog { background: var(--off-white); }
+.blog-inner { max-width: 1200px; margin: 0 auto; }
+.blog-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 28px; }
+.blog-card { background: var(--white); border-radius: 12px; padding: 32px; transition: all 0.3s; cursor: pointer; }
+.blog-card:hover { box-shadow: 0 8px 32px rgba(11,45,58,0.08); transform: translateY(-3px); }
+.blog-date { font-size: 0.65rem; color: var(--teal); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 12px; }
+.blog-text h3 { font-size: 1rem; line-height: 1.35; margin-bottom: 12px; }
+.blog-text p { font-size: 0.8rem; line-height: 1.7; color: #5A6B6B; }
+.blog-read { font-size: 0.75rem; color: var(--teal); margin-top: 16px; display: inline-block; border-bottom: 1px solid transparent; transition: border-color 0.3s; }
+.blog-card:hover .blog-read { border-color: var(--teal); }
+
+/* ══════ ARTISTS ══════ */
+.artists { background: var(--dark-deep); overflow: hidden; }
+.artists-inner { max-width: 1200px; margin: 0 auto; }
+.artist-feature { display: grid; grid-template-columns: 120px 1fr; gap: 32px; align-items: start; margin-top: 48px; }
+.artist-photo { position: relative; border-radius: 10px; overflow: hidden; aspect-ratio: 1; }
+.artist-photo img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(20%); transition: filter 0.5s; }
+.artist-photo:hover img { filter: grayscale(0%); }
+.artist-photo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(7,30,39,0.6) 0%, transparent 40%); pointer-events: none; }
+.artist-photo .artist-num { position: absolute; top: 12px; left: 12px; font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--teal-light); z-index: 1; }
+.artist-info h3 { font-size: clamp(1.4rem, 2.5vw, 2rem); font-weight: 400; color: var(--white); line-height: 1.2; margin-bottom: 6px; }
+.artist-info .artist-aka { font-size: 0.7rem; color: var(--teal-light); letter-spacing: 0.05em; margin-bottom: 20px; }
+.artist-info p { font-size: 0.8rem; line-height: 1.8; color: var(--gray); margin-bottom: 12px; }
+.artist-work { margin-top: 24px; padding-top: 20px; border-top: 1px solid rgba(245,245,240,0.08); }
+.artist-work .work-label { font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--teal); margin-bottom: 6px; }
+.artist-work .work-title { font-size: 0.95rem; font-weight: 400; color: var(--white); font-style: italic; line-height: 1.4; }
+.artist-view { display: inline-block; margin-top: 20px; font-size: 0.75rem; color: var(--teal-light); text-decoration: none; cursor: pointer; border-bottom: 1px solid rgba(44,181,181,0.3); padding-bottom: 2px; transition: border-color 0.3s; }
+.artist-view:hover { border-color: var(--teal-light); }
+.artists-cta { margin-top: 64px; padding: 40px; border: 1px solid rgba(245,245,240,0.06); border-radius: 12px; text-align: center; }
+.artists-cta h3 { font-size: 1rem; font-weight: 400; color: var(--white); margin-bottom: 8px; }
+.artists-cta p { font-size: 0.75rem; color: var(--gray); margin-bottom: 20px; line-height: 1.7; max-width: 480px; margin-left: auto; margin-right: auto; }
+.btn-teal { display: inline-block; background: var(--teal); color: var(--white); padding: 12px 32px; border-radius: 8px; font-size: 0.8rem; font-family: var(--font); font-weight: 500; text-decoration: none; transition: all 0.3s; cursor: pointer; }
+.btn-teal:hover { background: var(--teal-light); transform: translateY(-2px); }
+.artist-page-card { display: grid; grid-template-columns: 160px 1fr; gap: 40px; align-items: start; margin-bottom: 64px; }
+
+/* ══════ FOOTER ══════ */
+.footer-cta { background: var(--dark-deep); color: var(--white); text-align: center; padding: 120px 48px; }
+.footer-cta h2 { font-size: clamp(1.6rem, 3.5vw, 2.6rem); font-weight: 400; line-height: 1.25; margin-bottom: 48px; max-width: 700px; margin-left: auto; margin-right: auto; }
+.footer-cta h2 em { font-style: italic; color: var(--teal-light); }
+footer { background: var(--dark-deep); border-top: 1px solid rgba(245,245,240,0.06); padding: 32px 48px; display: flex; justify-content: space-between; align-items: center; color: var(--gray); font-size: 0.7rem; }
+footer a { color: var(--gray); text-decoration: none; transition: color 0.3s; }
+footer a:hover { color: var(--white); }
+.footer-links { display: flex; gap: 24px; }
+
+/* ══════ BLUEPOINTS PAGE EXTRAS ══════ */
+.bp-page-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 40px 0; }
+.bp-page-card { background: var(--off-white); border-radius: 10px; padding: 28px; }
+.bp-page-card h4 { font-size: 0.85rem; font-weight: 500; margin-bottom: 8px; color: var(--dark); }
+.bp-page-card p { font-size: 0.8rem; line-height: 1.7; color: #5A6B6B; margin: 0; }
+
+/* ══════ ANIM ══════ */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+.reveal { opacity: 0; transform: translateY(32px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ══════ RESPONSIVE ══════ */
+@media (max-width: 900px) {
+  nav { padding: 16px 24px; }
+  section, .subpage-hero, .subpage-body { padding-left: 24px; padding-right: 24px; }
+  .hero-content { padding: 100px 24px 60px; }
+  .hero-year { display: none; }
+  .about-inner, .manifesto-grid, .involved-grid, .bp-steps, .bp-page-grid, .artist-feature, .artist-page-card { grid-template-columns: 1fr; }
+  .artist-feature { gap: 32px; }
+  .about-inner { gap: 40px; } .about-counter { text-align: left; } .manifesto-grid { gap: 32px; }
+  .stats-grid, .blog-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <div class="nav-logo" onclick="showPage('main')">plastic<span>to</span>art</div>
+  <ul class="nav-links">
+    <li><a onclick="goSection('about')">About</a></li>
+    <li><a onclick="showPage('manifesto-page')">Manifesto</a></li>
+    <li><a onclick="goSection('why')">Why it matters</a></li>
+    <li><a onclick="goSection('art')">Art</a></li>
+    <li><a onclick="showPage('artists-page')">Artists</a></li>
+    <li><a href="atlas.html">Atlas</a></li>
+    <li><a onclick="goSection('blog')">Blog</a></li>
+    <li><a onclick="showPage('bluepoints-page')" class="nav-cta">Join us</a></li>
+  </ul>
+  <div class="burger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- FULLSCREEN MENU -->
+<div class="menu-overlay" id="menuOverlay">
+  <div class="menu-label">Navigation</div>
+  <a onclick="menuGo('about')">About</a>
+  <a onclick="menuShowPage('manifesto-page')">Manifesto</a>
+  <a onclick="menuGo('why')">Why it matters</a>
+  <a onclick="menuGo('art')">Art</a>
+  <a onclick="menuShowPage('artists-page')">Artists</a>
+  <a href="atlas.html">Atlas</a>
+  <a onclick="menuGo('blog')">Blog</a>
+  <a onclick="menuShowPage('bluepoints-page')">Join us</a>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- MAIN PAGE -->
+<!-- ═══════════════════════════════════════ -->
+<div id="mainPage" class="page active">
+
+<section class="hero" id="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero-content">
+    <div class="hero-tag">A global initiative by PranaSpring Water</div>
+    <h1>Plastic <em>to Art</em><br>— From Waste<br>to Wonder</h1>
+    <p class="hero-sub">A global initiative by PranaSpring Water, where recycled plastic is transformed into symbols of hope, art, and change. The future begins today.</p>
+    <a href="javascript:goSection('join')" class="btn-primary">Join the Movement</a>
+  </div>
+  <div class="hero-year">2026</div>
+</section>
+
+<section id="about">
+  <div class="about">
+    <div class="section-label">From Bottle to Inspiration</div>
+    <div class="about-inner">
+      <div class="about-text reveal">
+        <h2>Plastic to Art is an international initiative by PranaSpring Water</h2>
+        <p>Turning recycled plastic into unique art objects and sculptures. We show that even the most ordinary material can gain new life, new meaning, and inspire a more conscious future.</p>
+      </div>
+      <div class="about-counter reveal">
+        <div class="counter-num" id="bottleCounter">0<span>+</span></div>
+        <div class="counter-label">bottles transformed into art</div>
+      </div>
+    </div>
+    <div class="about-divider"></div>
+  </div>
+</section>
+
+<section class="manifesto" id="manifesto">
+  <div class="section-label" style="color:var(--teal-light)">Manifesto</div>
+  <div class="manifesto-grid">
+    <div class="reveal"><h2>Message <em>from the Future</em></h2></div>
+    <div class="manifesto-col reveal">
+      <p>We speak from tomorrow.<br><br>From a world where plastic is no longer waste but memory and inspiration.<br><br>From a future where water is treasured as the greatest gift, and art reminds us of who we are.</p>
+    </div>
+    <div class="manifesto-col reveal">
+      <p>Plastic to Art is more than a project.<br><br>It is a vision of an era where discarded matter becomes a sign of hope, and humanity learns to give things — and itself — a second chance.<br><br>Plastic to Art is a message from the future, and it begins today.</p>
+    </div>
+  </div>
+  <div class="manifesto-cta reveal"><a onclick="showPage('manifesto-page')">Read the full manifesto →</a></div>
+</section>
+
+<section class="stats" id="why">
+  <div class="section-label" style="color:var(--teal-light)">Why it matters</div>
+  <div class="stats-grid">
+    <div class="stat-card reveal"><div class="stat-number">8 mln</div><div class="stat-label">tons of plastic enter the oceans every year</div></div>
+    <div class="stat-card reveal"><div class="stat-number">1</div><div class="stat-label">sculpture can recycle the equivalent of thousands of bottles</div></div>
+    <div class="stat-card full reveal"><div class="stat-number" style="font-style:italic;">every</div><div class="stat-label">recycled object reduces CO₂ emissions and gives materials a second life</div></div>
+  </div>
+</section>
+
+<section class="bluepoints">
+  <div class="bp-content">
+    <div class="section-label" style="color:rgba(255,255,255,0.5)">Reward Program</div>
+    <h2 class="reveal"><em>BluePoints</em> —<br>Turning Plastic into Water</h2>
+    <p class="bp-desc reveal">BluePoints is an international program by PranaSpring Water. Every recycled plastic bottle turns into points. Together, we reduce waste, support art projects, and bring clean water where it's needed most.</p>
+    <div class="bp-steps">
+      <div class="bp-step reveal"><div class="bp-step-num">01</div><h3>Recycle plastic</h3><p>Collect and recycle your plastic bottles through our program</p></div>
+      <div class="bp-step reveal"><div class="bp-step-num">02</div><h3>Earn BluePoints</h3><p>Every bottle earns you points towards rewards and impact</p></div>
+      <div class="bp-step reveal"><div class="bp-step-num">03</div><h3>Redeem rewards</h3><p>Redeem them for liters of water, rewards, or support for water-scarce regions</p></div>
+    </div>
+    <a class="btn-outline reveal" onclick="showPage('bluepoints-page')">Learn more about BluePoints</a>
+  </div>
+</section>
+
+<section class="transform">
+  <h2 class="reveal">Plastic to Art <em>transforms statistics into symbols.</em> Each object is not only an artwork — it is a statement that change is possible.</h2>
+</section>
+
+<section>
+  <div class="waterorg">
+    <div class="section-label">Water for All</div>
+    <div class="waterorg-text reveal">
+      <h3>Part of the proceeds from Plastic to Art goes to Water.org and similar initiatives.</h3>
+      <p>Together, we help communities in need gain access to safe and clean water.</p>
+    </div>
+  </div>
+</section>
+
+<section class="timeline" id="art">
+  <div class="timeline-inner">
+    <div class="section-label">Art That Speaks</div>
+    <div class="timeline-desc reveal">Our sculptures are born from yesterday's plastic and tomorrow's vision. Each piece carries a story about time, nature, and humanity's responsibility.</div>
+  </div>
+</section>
+
+<!-- ARTISTS PREVIEW -->
+<section class="artists" id="artists">
+  <div class="artists-inner">
+    <div class="section-label" style="color:var(--teal-light)">Our Artists</div>
+    <div class="artist-feature reveal">
+      <div class="artist-photo">
+        <div class="artist-num">Artist 01</div>
+        <img src="data:image/jpeg;base64,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" alt="Zakhar Evseev">
+      </div>
+      <div class="artist-info">
+        <h3>Zakhar Evseev</h3>
+        <div class="artist-aka">aka Zak Mini Monster</div>
+        <p>For more than 25 years, Zak Mini Monster has been shaping his own artistic language, originating in street art and expanding into projects of global scale. His work fuses imaginary characters with techniques of classical animation, creating a distinctive plasticity of images.</p>
+        <p>Collaborations with Nike, Xbox, and collectors including Justin Bieber have positioned his practice at the intersection of street culture, fine art, and design.</p>
+        <div class="artist-work">
+          <div class="work-label">Plastic to Art · 2026</div>
+          <div class="work-title">The Astronaut from the Future — A Message to Myself</div>
+        </div>
+        <a class="artist-view" onclick="showPage('artists-page')">View full profile →</a>
+      </div>
+    </div>
+    <div class="artists-cta reveal">
+      <h3>Are you an artist?</h3>
+      <p>We invite creators worldwide to join Plastic to Art. Share your vision, transform matter, and become part of a movement that turns waste into cultural memory.</p>
+      <a class="btn-teal" onclick="showPage('artists-page')">Become an Artist</a>
+    </div>
+  </div>
+</section>
+
+<section id="join">
+  <div class="involved">
+    <div class="section-label">Be Part of the Change</div>
+    <div class="involved-grid">
+      <div class="involved-card reveal"><div class="for-label">For Everyone</div><h3>Support the cause</h3><p>By choosing PranaSpring Water, you support Plastic to Art</p></div>
+      <div class="involved-card reveal"><div class="for-label">For Artists</div><h3>Create with us</h3><p>Share your vision and create with us</p></div>
+      <div class="involved-card reveal"><div class="for-label">For Partners</div><h3>Collaborate</h3><p>Join as a collaborator or supporter of the initiative</p></div>
+    </div>
+    <div class="involved-cta reveal"><a href="javascript:showPage('bluepoints-page')" class="btn-dark">Get Involved</a></div>
+  </div>
+</section>
+
+<!-- BLOG -->
+<section class="blog" id="blog">
+  <div class="blog-inner">
+    <div class="section-label">Stories of Transformation</div>
+    <div class="blog-grid">
+
+      <div class="blog-card reveal" onclick="showPage('blog-1')">
+        <div class="blog-date">Essay · 2026</div>
+        <div class="blog-text">
+          <h3>When Matter Remembers: The Philosophy Behind Plastic Sculpture</h3>
+          <p>Every plastic object carries a history — of manufacture, of use, of discarding. What happens when an artist intervenes at the moment of forgetting?</p>
+          <span class="blog-read">Read more</span>
+        </div>
+      </div>
+
+      <div class="blog-card reveal" onclick="showPage('blog-2')">
+        <div class="blog-date">Feature · 2026</div>
+        <div class="blog-text">
+          <h3>From Ocean Debris to Gallery Wall: The Journey of a Single Bottle</h3>
+          <p>The path from waste to wonder is neither short nor simple. We trace the transformation of recovered plastic into a finished work of art.</p>
+          <span class="blog-read">Read more</span>
+        </div>
+      </div>
+
+      <div class="blog-card reveal" onclick="showPage('blog-3')">
+        <div class="blog-date">Perspective · 2026</div>
+        <div class="blog-text">
+          <h3>Water, Plastic, and the Architecture of Attention</h3>
+          <p>Two materials define our civilizational moment: the one we waste without thinking, and the one we cannot survive without. Together, they frame a new ethics of matter.</p>
+          <span class="blog-read">Read more</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="footer-cta">
+  <h2 class="reveal">Every bottle matters.<br>Every sculpture is a voice of the planet.<br>Together, we turn waste <em>into wonder.</em></h2>
+  <a href="javascript:showPage('bluepoints-page')" class="btn-primary" style="animation:none; opacity:1;">Support Plastic to Art</a>
+</div>
+
+</div><!-- /mainPage -->
+
+
+<!-- ═══════════════════════════════════════ -->
+<!-- MANIFESTO PAGE -->
+<!-- ═══════════════════════════════════════ -->
+<div id="manifesto-page" class="page">
+  <div class="subpage-hero">
+    <div class="section-label">Manifesto</div>
+    <h1>A Manifesto of a New <em>Material Consciousness</em></h1>
+    <p class="lead">We speak from the future. From a world where plastic is no longer considered waste, but a symbol of memory and transformation.</p>
+  </div>
+  <div class="subpage-body">
+    <a class="back-link" onclick="showPage('main')">← Back to home</a>
+
+    <p>From a world where humanity has finally learned to see value not only in what is created, but in what was once discarded.</p>
+
+    <blockquote>Plastic to Art is not a project. It is a new lens. It is the moment when civilization changes the way it sees matter.</blockquote>
+
+    <p>For centuries, progress was measured by the amount of resources humanity could extract from the Earth. But a new era begins when progress is measured by the ability to transform.</p>
+
+    <h2>The Material of Our Civilization</h2>
+
+    <p>Plastic is one of the defining materials of our civilization. It accompanies us everywhere. It exists in everyday life so naturally that we have almost stopped noticing it. And yet this material has become a symbol of our era. Not because it lacks value. But because humanity, for a long time, did not know how to recognize its potential.</p>
+
+    <p>Plastic to Art begins with a simple idea: matter is never truly finished. Every object is only a stage of form. Every material holds the possibility of reinterpretation.</p>
+
+    <div class="highlight">
+      <p><strong>When plastic becomes art, it ceases to be a function. It becomes a story.</strong> A bottle becomes form. A fragment becomes image. What was once considered a remnant becomes part of cultural memory.</p>
+    </div>
+
+    <p>This is not recycling. This is the re-imagination of matter. We are not merely changing the destiny of objects. We are changing our relationship with the material world. Because objects shape culture as deeply as ideas do.</p>
+
+    <h2>A New Answer</h2>
+
+    <p>Civilizations can be understood by the way they treat what remains after them. Plastic to Art offers a new answer. Nothing created by humanity should be deprived of the possibility of meaning.</p>
+
+    <p>This movement is not only about plastic. It is about imagination. The ability to see form where others see residue. The ability to create beauty from what once seemed finished.</p>
+
+    <h2>Water</h2>
+
+    <p>At the center of this perspective stands another fundamental force. Water. Water is the quiet architecture of life. It connects the planet through a single system of movement. It links atmosphere, mountains, soil, glaciers, and living organisms in a continuous planetary cycle. And yet modern civilization has almost stopped noticing it.</p>
+
+    <p>Plastic to Art exists beside this understanding. Because the future of civilization will be defined not only by technology, but by attention. Attention to matter. Attention to resources. Attention to what has long remained unnoticed.</p>
+
+    <h2>Art as Language</h2>
+
+    <p>In the world we imagine, art becomes a language through which matter begins to speak again. A sculpture made from plastic is not merely an object. It is a sign. A sign that form can continue. A sign that matter never disappears. A sign that every object can receive a new story.</p>
+
+    <p>Every work created through Plastic to Art is both an artifact and a glimpse of the future. An artifact — because it reflects the era in which it was created. A glimpse of the future — because it suggests what the next culture of matter might become.</p>
+
+    <div class="highlight">
+      <p><strong>This is not the end of plastic. It is the beginning of a new culture of matter.</strong> A culture in which form continues the life of objects. A culture in which creativity is stronger than indifference. A culture in which art connects the past of things with their future.</p>
+    </div>
+
+    <p>Plastic to Art is a message from the future. And that future begins now.</p>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════ -->
+<!-- BLUEPOINTS PAGE -->
+<!-- ═══════════════════════════════════════ -->
+<div id="bluepoints-page" class="page">
+  <div class="subpage-hero" style="background: linear-gradient(170deg, #0F3D4D 0%, var(--teal) 60%);">
+    <div class="section-label" style="color: rgba(255,255,255,0.5);">Reward Program</div>
+    <h1><em>BluePoints</em> — Turning Plastic into Water</h1>
+    <p class="lead">A new international initiative that transforms environmental actions into real value. Recycle plastic. Earn points. Redeem for water, rewards, or global impact.</p>
+  </div>
+  <div class="subpage-body">
+    <a class="back-link" onclick="showPage('main')">← Back to home</a>
+
+    <h2>What is BluePoints?</h2>
+    <p>BluePoints is a new international initiative that transforms environmental actions into real value. We are launching this program starting in the UAE, and inviting partners worldwide to join us. The first free liters of clean water are provided by PranaSpring Water.</p>
+
+    <h2>How it works</h2>
+
+    <h3>1. Recycle plastic</h3>
+    <p>At partner stores, collection points, vending machines, or through delivery services. Every bottle equals your BluePoints.</p>
+
+    <h3>2. Earn points</h3>
+    <p>Each action adds BluePoints to your personal Water Wallet.</p>
+
+    <h3>3. Use BluePoints</h3>
+    <div class="bp-page-grid">
+      <div class="bp-page-card"><h4>Free water</h4><p>Free liters of water from PranaSpring Water</p></div>
+      <div class="bp-page-card"><h4>Rewards</h4><p>Discounts and rewards with our partners</p></div>
+      <div class="bp-page-card"><h4>Donate</h4><p>Donate liters to water-scarce regions with live tracking</p></div>
+      <div class="bp-page-card"><h4>Support art</h4><p>Support art installations made from recycled plastic</p></div>
+    </div>
+
+    <h2>For Partners</h2>
+    <p>We are at the very beginning of this journey and actively building a partner network. We work with retail and supermarkets to connect recycling points, FMCG and beverage brands to link sustainability goals, municipalities and NGOs to expand social impact, and corporates to integrate BluePoints into ESG programs.</p>
+
+    <p>Together, we can reduce plastic waste and bring clean water where it's needed most.</p>
+
+    <h2>Transparency and Trust</h2>
+    <p>Every point has a digital record. Our global map shows where your impact goes. Public rankings of cities, schools, and companies ensure full accountability.</p>
+
+    <div class="highlight">
+      <p><strong>Why it matters:</strong> For people — small actions turn into real liters of water. For brands — measurable ESG impact and powerful PR. For the world — less plastic, more clean water.</p>
+    </div>
+
+    <p>BluePoints is starting now in the UAE, with pilot collaborations in retail and recycling. This is just the beginning: our goal is to expand globally in 2026.</p>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════ -->
+<!-- ARTISTS PAGE -->
+<!-- ═══════════════════════════════════════ -->
+<div id="artists-page" class="page">
+  <div class="subpage-hero" style="background: var(--dark-deep);">
+    <div class="section-label" style="color:var(--teal-light)">The Creators</div>
+    <h1>Artists of <em>Plastic to Art</em></h1>
+    <p class="lead">We collaborate with artists who see form where others see residue. Each creator brings their own language to the transformation of matter into meaning.</p>
+  </div>
+  <div class="subpage-body" style="max-width:1000px;">
+    <a class="back-link" onclick="showPage('main')">← Back to home</a>
+
+    <!-- ARTIST 01: ZAKHAR -->
+    <div class="artist-page-card">
+      <div>
+        <img src="data:image/jpeg;base64,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" alt="Zakhar Evseev" style="width:100%; border-radius:10px; aspect-ratio:1; object-fit:cover;">
+      </div>
+      <div>
+        <div style="font-size:0.6rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--teal); margin-bottom:12px;">Artist 01</div>
+        <h2 style="font-size:1.8rem; font-weight:400; margin-bottom:4px;">Zakhar Evseev</h2>
+        <div style="font-size:0.8rem; color:var(--teal); margin-bottom:28px;">aka Zak Mini Monster</div>
+
+        <p>For more than a quarter of a century, Zak Mini Monster has been shaping his own artistic language, which originated in street art and gradually expanded into projects of global scale.</p>
+
+        <p>His creative biography is marked by collaborations with major brands such as Nike and Xbox, as well as the attention of collectors — among them pop star Justin Bieber, who included one of the artist's works in his personal collection.</p>
+
+        <p>At the core of his concept lies the idea of art as a multi-layered exploration of the world and of his own identity. For the artist, it is not a single medium that matters, but the very process of transforming reality through various forms — from graffiti and painting to sculpture and jewelry objects.</p>
+
+        <p>A key element of his style is the fusion of imaginary characters and techniques of classical animation, which together create a distinctive plasticity of images. This is how a recognizable artistic code emerges, resonating with audiences and collectors worldwide.</p>
+
+        <p>Importantly, each of the artist's works carries within it the memory of street culture as a space of freedom and self-expression.</p>
+
+        <div class="highlight" style="margin-top:32px;">
+          <div style="font-size:0.6rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--teal-light); margin-bottom:12px;">Plastic to Art · 2026</div>
+          <p style="margin:0;"><strong>The Astronaut from the Future — A Message to Myself</strong></p>
+          <p style="color:var(--gray); margin-top:12px; margin-bottom:0;">A sculpture created from recycled plastic as part of the Plastic to Art initiative. The work reimagines discarded material as a vessel for memory, identity, and the possibility of a future shaped by conscious transformation.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- MORE ARTISTS CTA -->
+    <div style="border:1px solid rgba(11,45,58,0.1); border-radius:12px; padding:56px; text-align:center; margin-top:40px;">
+      <div style="font-size:0.6rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--teal); margin-bottom:16px;">Open call</div>
+      <h2 style="font-size:1.4rem; font-weight:400; margin-bottom:16px;">Become a Plastic to Art Artist</h2>
+      <p style="max-width:520px; margin:0 auto 28px;">We invite creators worldwide to join the movement. If you see form where others see waste, if your work carries the memory of material transformation — we want to hear from you.</p>
+      <a class="btn-teal">Apply to join</a>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════ -->
+<!-- BLOG ARTICLE 1 -->
+<!-- ═══════════════════════════════════════ -->
+<div id="blog-1" class="page">
+  <div class="subpage-hero">
+    <div class="section-label">Essay · 2026</div>
+    <h1>When Matter Remembers: The Philosophy Behind <em>Plastic Sculpture</em></h1>
+    <p class="lead">Every plastic object carries a history — of manufacture, of use, of discarding. What happens when an artist intervenes at the moment of forgetting?</p>
+  </div>
+  <div class="subpage-body">
+    <a class="back-link" onclick="showPage('main')">← Back to stories</a>
+
+    <p>There is a moment in the life of every object when it ceases to be useful. A bottle is emptied. A container is discarded. In most cases, this is the end of the story. The object enters a system of disposal and disappears from consciousness. But what if that moment — the threshold between function and abandonment — is precisely the point at which meaning begins?</p>
+
+    <p>Plastic to Art operates at this threshold. It intercepts objects at the edge of forgetting and transforms them into carriers of cultural memory. This is not sentimentality. It is a philosophical proposition: that matter is never finished, only unrecognized.</p>
+
+    <blockquote>The sculptor who works with reclaimed plastic is not making something from nothing. They are making something from everything — from the accumulated history of production, transit, consumption, and discard.</blockquote>
+
+    <p>Western civilization has long operated on a linear model: extract, produce, consume, dispose. This model assumes that materials have a terminal point. But a growing body of thought — from cradle-to-cradle design to circular economics — suggests otherwise. Matter does not end. It merely changes form.</p>
+
+    <p>Art has always understood this intuitively. The sculptor sees form where others see residue. The painter sees color where others see decay. Plastic to Art extends this tradition into the most abundant and most overlooked material of our age.</p>
+
+    <p>Consider: the global production of plastic since the 1950s exceeds 8 billion tonnes. Less than 10 percent has been recycled. The rest persists — in landfills, in oceans, in soil. This is not merely an environmental fact. It is a cultural one. We are surrounded by a material we have chosen not to see.</p>
+
+    <p>The artist changes the terms of visibility. A sculpture made from recovered bottles does not merely represent an idea about sustainability. It embodies a shift in perception — from waste to value, from ending to continuation, from indifference to attention.</p>
+
+    <div class="highlight">
+      <p><strong>This is the core proposition of Plastic to Art:</strong> that the way a civilization treats its remnants reveals its deepest values. And that by transforming those remnants into art, we can begin to transform the values themselves.</p>
+    </div>
+
+    <p>The philosophy is not new. Marcel Duchamp placed a urinal in a gallery in 1917 and called it art. What is new is the scale, the urgency, and the material itself. Plastic — ubiquitous, resilient, almost eternal — is the perfect medium for a message about permanence, transformation, and the refusal to forget.</p>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════ -->
+<!-- BLOG ARTICLE 2 -->
+<!-- ═══════════════════════════════════════ -->
+<div id="blog-2" class="page">
+  <div class="subpage-hero">
+    <div class="section-label">Feature · 2026</div>
+    <h1>From Ocean Debris to Gallery Wall: <em>The Journey of a Single Bottle</em></h1>
+    <p class="lead">The path from waste to wonder is neither short nor simple. We trace the transformation of recovered plastic into a finished work of art.</p>
+  </div>
+  <div class="subpage-body">
+    <a class="back-link" onclick="showPage('main')">← Back to stories</a>
+
+    <p>It begins, as most journeys do, without ceremony. A plastic bottle — PET, transparent, 500 milliliters — is purchased at a convenience store in Dubai. Water is drunk. The bottle is tossed into a bin. For most objects, this is where the story ends. For this one, it is where the story begins.</p>
+
+    <h2>Collection</h2>
+    <p>The bottle enters a collection stream managed by one of our recycling partners. It is sorted, cleaned, and categorized. At this stage, it is still waste — anonymous, undifferentiated, one of millions. But it has already crossed a threshold: someone chose to place it in a recycling bin rather than a landfill. That small decision is the first act of transformation.</p>
+
+    <h2>Selection</h2>
+    <p>Artists working with Plastic to Art do not simply accept whatever arrives. They select. They look for qualities that most people overlook: the particular transparency of aged PET, the way certain plastics hold color, the structural possibilities of deformed containers. Selection is the first creative act — the moment when a material ceases to be generic and becomes specific.</p>
+
+    <h2>Transformation</h2>
+    <p>The techniques vary as widely as the artists themselves. Some melt and reshape. Some cut and reassemble. Some leave the original form largely intact, intervening only enough to shift perception. What they share is a conviction that the material itself has something to contribute — that the history visible in scratches, labels, and deformations is not a flaw to be hidden but a quality to be revealed.</p>
+
+    <blockquote>A bottle that has crossed an ocean carries the ocean within it. The artist's task is not to erase that journey but to make it visible.</blockquote>
+
+    <h2>Presentation</h2>
+    <p>The finished work enters a gallery, a public space, a collection. It carries with it a provenance unlike any conventional artwork: not the studio of a single creator, but the entire lifecycle of industrial civilization. Viewer, consumer, maker, discarded, recovered, transformed. Every stage is present in the final form.</p>
+
+    <p>This is what makes Plastic to Art fundamentally different from conventional sculpture. The material is not neutral. It arrives with meaning already embedded. The artist's role is not to impose meaning but to reveal it — to make visible what was already there, waiting to be seen.</p>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════ -->
+<!-- BLOG ARTICLE 3 -->
+<!-- ═══════════════════════════════════════ -->
+<div id="blog-3" class="page">
+  <div class="subpage-hero">
+    <div class="section-label">Perspective · 2026</div>
+    <h1>Water, Plastic, and <em>the Architecture of Attention</em></h1>
+    <p class="lead">Two materials define our civilizational moment: the one we waste without thinking, and the one we cannot survive without.</p>
+  </div>
+  <div class="subpage-body">
+    <a class="back-link" onclick="showPage('main')">← Back to stories</a>
+
+    <p>Consider two substances. One is essential to every living process on Earth — to cellular function, to weather, to agriculture, to thought itself. The other is a synthetic polymer invented less than a century ago, now produced at a rate of over 400 million tonnes per year. One we treat as a given. The other we treat as disposable. Both assumptions are catastrophically wrong.</p>
+
+    <p>Water and plastic are the twin materials of our moment. Not because they are similar — they could hardly be more different — but because the way we relate to each of them reveals the same underlying failure: a failure of attention.</p>
+
+    <blockquote>We have built a civilization that is extraordinarily good at producing and extraordinarily poor at noticing. We produce plastic without noticing where it goes. We consume water without noticing where it comes from.</blockquote>
+
+    <h2>The Attention Deficit</h2>
+    <p>The crisis of plastic waste is not primarily a technical problem. Technologies for recycling, upcycling, and biodegradation already exist. The crisis is one of perception. We do not see plastic after we discard it. It falls below the threshold of awareness. The same is true of water. We turn a tap and water appears. We close it and water vanishes. The vast, intricate, planetary system that delivers water to that tap — the evaporation cycles, the aquifer recharge, the watershed management — remains invisible.</p>
+
+    <p>Plastic to Art addresses this invisibility directly. By transforming discarded plastic into objects of beauty and contemplation, it forces a confrontation with what we have chosen not to see. The sculpture in the gallery was once the bottle in the gutter. The aesthetic experience is inseparable from the ethical one.</p>
+
+    <h2>Two Streams Converge</h2>
+    <p>This is why Plastic to Art and the mission of PranaSpring Water are not separate initiatives but aspects of a single vision. Both are concerned with the restoration of attention — with making visible what civilization has learned to overlook. Plastic and water, waste and essence, the discarded and the indispensable — these are not opposites but partners in a new understanding of how matter moves through the world.</p>
+
+    <div class="highlight">
+      <p><strong>The future of civilization will not be defined by what we produce. It will be defined by what we notice.</strong> By whether we learn to see the bottle after it is emptied. By whether we learn to value the water before it is gone.</p>
+    </div>
+
+    <p>Plastic to Art is a practice of attention. Every sculpture is a reminder that matter persists, that form continues, that nothing truly disappears. And every liter of water saved, protected, or delivered to those in need is a parallel act — a recognition that the most ordinary substance on Earth is also the most extraordinary.</p>
+
+    <p>This is the architecture of attention. And it begins with a single act of seeing.</p>
+  </div>
+</div>
+
+
+<!-- FOOTER (shared) -->
+<footer>
+  <div class="nav-logo" style="font-size:0.9rem;" onclick="showPage('main')">plastic<span style="color:var(--teal-light)">to</span>art</div>
+  <div style="color:var(--gray); font-size:0.7rem;">&copy; 2026 PranaSpring Water</div>
+  <div class="footer-links"><a href="#">Terms and Conditions</a><a href="#">Privacy Policy</a></div>
+</footer>
+
+<script>
+// ═══════════════════════════════════════
+// PAGE NAVIGATION
+// ═══════════════════════════════════════
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  if (id === 'main') {
+    document.getElementById('mainPage').classList.add('active');
+    document.getElementById('mainNav').classList.remove('page-nav');
+  } else {
+    document.getElementById(id).classList.add('active');
+    document.getElementById('mainNav').classList.add('page-nav');
+  }
+  window.scrollTo({ top: 0, behavior: 'instant' });
+  // Re-observe reveals on new page
+  document.querySelectorAll('.reveal:not(.visible)').forEach(el => observer.observe(el));
+}
+
+function goSection(id) {
+  showPage('main');
+  setTimeout(() => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  }, 50);
+}
+
+// ═══════════════════════════════════════
+// HERO CANVAS
+// ═══════════════════════════════════════
+(function () {
+  const canvas = document.getElementById('heroCanvas');
+  const ctx = canvas.getContext('2d');
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  let cW, cH;
+  const mouse = { x: -9999, y: -9999, active: false };
+
+  function resize() {
+    cW = canvas.offsetWidth; cH = canvas.offsetHeight;
+    canvas.width = cW * dpr; canvas.height = cH * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function sculpturePoints(count, scale) {
+    const pts = [];
+    for (let i = 0; i < count; i++) {
+      const t = i / count;
+      const y = (1 - t) * scale * 1.6 - scale * 0.8;
+      const w = Math.sin(t * Math.PI) * (0.35 + 0.15 * Math.sin(t * Math.PI * 3));
+      const twist = Math.sin(t * Math.PI * 2.5 + 0.5) * 0.15;
+      const xOff = (twist + (Math.random() - 0.5) * w) * scale;
+      const n = Math.floor(2 + w * 8);
+      for (let j = 0; j < n; j++) {
+        pts.push({ tx: xOff + (Math.random() - 0.5) * w * scale * 0.9, ty: y + (Math.random() - 0.5) * 8 });
+      }
+    }
+    return pts;
+  }
+
+  const bScale = Math.min(cW, cH) * 0.28;
+  const particles = sculpturePoints(60, bScale).map(sp => ({
+    tx: sp.tx, ty: sp.ty,
+    x: (Math.random() - 0.5) * cW * 1.5, y: (Math.random() - 0.5) * cH * 1.5,
+    vx: 0, vy: 0,
+    size: 0.8 + Math.random() * 3, alpha: 0.15 + Math.random() * 0.6,
+    color: Math.random() > 0.3 ? [78, 205, 196] : [200, 230, 255],
+    phase: Math.random() * Math.PI * 2,
+    wobbleAmp: 1 + Math.random() * 3, wobbleSpd: 0.3 + Math.random() * 1.2,
+    returnSpeed: 0.02 + Math.random() * 0.03,
+  }));
+
+  const ambient = Array.from({ length: 35 }, () => ({
+    x: Math.random() * 1500, y: Math.random() * 1000,
+    vy: -(0.1 + Math.random() * 0.3), vx: (Math.random() - 0.5) * 0.2,
+    size: 0.3 + Math.random() * 1.5, alpha: 0.03 + Math.random() * 0.1,
+  }));
+
+  const rings = []; let lastRing = 0; const startMs = Date.now();
+
+  function draw() {
+    const w = cW, h = cH;
+    ctx.clearRect(0, 0, w, h);
+    const elapsed = Date.now() - startMs;
+    const t = elapsed * 0.001;
+    const cx = w * 0.65, cy = h * 0.5;
+    const mx = mouse.x, my = mouse.y, mA = mouse.active;
+
+    if (elapsed - lastRing > 4000) { rings.push({ born: elapsed, maxR: 120 + Math.random() * 80 }); lastRing = elapsed; }
+    for (let i = rings.length - 1; i >= 0; i--) {
+      const age = (elapsed - rings[i].born) / 3000;
+      if (age > 1) { rings.splice(i, 1); continue; }
+      ctx.strokeStyle = `rgba(78,205,196,${(1 - age) * 0.07})`; ctx.lineWidth = 0.7;
+      ctx.beginPath(); ctx.arc(cx, cy, age * rings[i].maxR, 0, Math.PI * 2); ctx.stroke();
+    }
+
+    ctx.lineWidth = 0.3;
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < Math.min(i + 10, particles.length); j++) {
+        const dx = particles[i].x - particles[j].x, dy = particles[i].y - particles[j].y;
+        const d2 = dx * dx + dy * dy;
+        if (d2 < 1600) {
+          ctx.strokeStyle = `rgba(78,205,196,${(1 - Math.sqrt(d2) / 40) * 0.07})`;
+          ctx.beginPath(); ctx.moveTo(particles[i].x + cx, particles[i].y + cy);
+          ctx.lineTo(particles[j].x + cx, particles[j].y + cy); ctx.stroke();
+        }
+      }
+    }
+
+    for (const p of particles) {
+      const breathe = 1 + Math.sin(t * 0.6) * 0.02;
+      const wX = Math.sin(t * p.wobbleSpd + p.phase) * p.wobbleAmp;
+      const wY = Math.cos(t * p.wobbleSpd * 0.8 + p.phase) * p.wobbleAmp;
+      const sX = p.tx * breathe + wX, sY = p.ty * breathe + wY;
+      const pmx = (p.x + cx) - mx, pmy = (p.y + cy) - my;
+      const md = Math.sqrt(pmx * pmx + pmy * pmy);
+      if (mA && md < 180 && md > 0) { const f = (1 - md / 180) * 12; p.vx += (pmx / md) * f; p.vy += (pmy / md) * f; }
+      else { p.vx += (sX - p.x) * p.returnSpeed; p.vy += (sY - p.y) * p.returnSpeed; }
+      p.vx *= 0.92; p.vy *= 0.92; p.x += p.vx; p.y += p.vy;
+      const dx = p.x + cx, dy = p.y + cy;
+      const gs = p.size * 4.5;
+      const gr = ctx.createRadialGradient(dx, dy, 0, dx, dy, gs);
+      gr.addColorStop(0, `rgba(${p.color.join(',')},${p.alpha * 0.3})`); gr.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(dx, dy, gs, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = `rgba(${p.color.join(',')},${p.alpha})`; ctx.beginPath(); ctx.arc(dx, dy, p.size, 0, Math.PI * 2); ctx.fill();
+    }
+
+    for (const a of ambient) {
+      a.x += a.vx; a.y += a.vy;
+      if (a.y < -5) { a.y = h + 5; a.x = Math.random() * w; }
+      ctx.fillStyle = `rgba(78,205,196,${a.alpha})`; ctx.beginPath(); ctx.arc(a.x, a.y, a.size, 0, Math.PI * 2); ctx.fill();
+    }
+
+    const cg = ctx.createRadialGradient(cx, cy, 0, cx, cy, 200);
+    cg.addColorStop(0, `rgba(78,205,196,${0.04 + Math.sin(t * 0.8) * 0.015})`); cg.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = cg; ctx.beginPath(); ctx.arc(cx, cy, 200, 0, Math.PI * 2); ctx.fill();
+    requestAnimationFrame(draw);
+  }
+  draw();
+
+  canvas.addEventListener('mousemove', e => { const r = canvas.getBoundingClientRect(); mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top; mouse.active = true; });
+  canvas.addEventListener('mouseleave', () => { mouse.active = false; });
+  canvas.addEventListener('touchmove', e => { const r = canvas.getBoundingClientRect(); const t = e.touches[0]; mouse.x = t.clientX - r.left; mouse.y = t.clientY - r.top; mouse.active = true; }, { passive: true });
+  canvas.addEventListener('touchend', () => { mouse.active = false; });
+})();
+
+// ═══════════════════════════════════════
+// HAMBURGER MENU
+// ═══════════════════════════════════════
+function toggleMenu() {
+  document.querySelector('.burger').classList.toggle('open');
+  document.getElementById('menuOverlay').classList.toggle('open');
+  document.body.style.overflow = document.getElementById('menuOverlay').classList.contains('open') ? 'hidden' : '';
+}
+function closeMenu() {
+  document.querySelector('.burger').classList.remove('open');
+  document.getElementById('menuOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function menuGo(id) { closeMenu(); goSection(id); }
+function menuShowPage(id) { closeMenu(); showPage(id); }
+
+// ═══════════════════════════════════════
+// ANIMATED COUNTER (About section)
+// ═══════════════════════════════════════
+(function () {
+  const el = document.getElementById('bottleCounter');
+  if (!el) return;
+  const target = 12400;
+  let started = false;
+
+  function animateCount() {
+    if (started) return;
+    started = true;
+    const duration = 2200;
+    const start = performance.now();
+    function tick(now) {
+      const progress = Math.min(1, (now - start) / duration);
+      const ease = 1 - Math.pow(1 - progress, 3);
+      const val = Math.floor(target * ease);
+      el.innerHTML = val.toLocaleString() + '<span>+</span>';
+      if (progress < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  const cObserver = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting) animateCount();
+  }, { threshold: 0.5 });
+  cObserver.observe(el);
+})();
+
+// ═══════════════════════════════════════
+// NAV & REVEAL
+// ═══════════════════════════════════════
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('mainNav');
+  if (!nav.classList.contains('page-nav')) {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  }
+});
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
